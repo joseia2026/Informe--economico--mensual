@@ -1,0 +1,207 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "",
+          "readStatus": "read"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "informe",
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -512,
+        -160
+      ],
+      "id": "7bcc2dad-6e7f-454a-9886-8a17b82bf37b",
+      "name": "Gmail Trigger",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1iveeDZrKWbzIxyA",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -32
+      ],
+      "id": "20cec7e4-b528-4015-a98b-1a64392c41f3",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Eres un analista financiero experto en estados de resultados industriales. Con los siguientes datos ya calculados, genera un informe económico mensual  profesional, claro y visualmente amigable en formato HTML.  El informe debe seguir EXACTAMENTE esta estructura:  --- ESTADO DE RESULTADOS — [MES Y AÑO] ---  1. VENTAS:                          \\$ {{ \\$json.ventas }} 2. Menos Rechazo (1%):             -$ {{ \\$json.rechazo }} 3. VENTAS NETAS:                    \\$ {{ \\$json.ventasNetas }}  --- 4. COSTO DE PRODUCCIÓN:    - MOD / MOI / Cs. Soc. (640000): \\$ {{ \\$json.mod }}    - Gastos de Fabricación (650000):$ {{ \\$json.gastosFab }}    - Costo Directo Fab. (660000):   \\$ {{ \\$json.costoDirecto }}    TOTAL COSTO DE PRODUCCIÓN:      -$ {{ \\$json.costoProduccion }}  5. RESULTADO BRUTO:                 \\$ {{ \\$json.resultadoBruto }}  --- 6. Gastos de Administración (610000): -$ {{ \\$json.gastosAdmin }} 7. Gastos de Comercialización (620000):-$ {{ \\$json.gastosComercial }} 8. Gastos de Financiación (630000):   -$ {{ \\$json.gastosFinanciacion }}  --- 9. RESULTADO NETO:                  \\$ {{ \\$json.resultadoNeto }} ---  Además: - Incluí un cuadro aparte detallado del Costo de Producción mostrando    cada ítem con su importe. - Usá colores verdes para resultados positivos y rojos para negativos. - El HTML debe ser limpio, con tabla bien formateada y legible por email. - Al pie, dejá un espacio reservado con el id=\"graficotorta\"    donde se insertará el gráfico. - Usá un tono profesional pero claro."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -128,
+        -144
+      ],
+      "id": "ba776f24-705c-4cbc-a639-2959f3742e1c",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -112
+      ],
+      "id": "8a46957e-e745-45f4-a6d7-9304c554fa75",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "binaryPropertyName": "informe_0",
+        "options": {
+          "headerRow": false
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        80
+      ],
+      "id": "da13eb81-f654-4c46-8e0a-5f26be4dcd94",
+      "name": "Extract from File1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        -80,
+        80
+      ],
+      "id": "255ebdbe-c71d-4ed9-b666-8f104e8a2a40",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "a9FpFfnac1gVqLzC",
+          "name": "Anthropic account"
+        }
+      },
+      "notes": "=Eres un analista financiero experto en estados de resultados industriales.\nCon los siguientes datos ya calculados, genera un informe económico mensual \nprofesional, claro y visualmente amigable en formato HTML.\n\nEl informe debe seguir EXACTAMENTE esta estructura:\n\n---\nESTADO DE RESULTADOS — [MES Y AÑO]\n---\n\n1. VENTAS:                          \\$ {{ \\$json.ventas }}\n2. Menos Rechazo (1%):             -$ {{ \\$json.rechazo }}\n3. VENTAS NETAS:                    \\$ {{ \\$json.ventasNetas }}\n\n---\n4. COSTO DE PRODUCCIÓN:\n   - MOD / MOI / Cs. Soc. (640000): \\$ {{ \\$json.mod }}\n   - Gastos de Fabricación (650000):$ {{ \\$json.gastosFab }}\n   - Costo Directo Fab. (660000):   \\$ {{ \\$json.costoDirecto }}\n   TOTAL COSTO DE PRODUCCIÓN:      -$ {{ \\$json.costoProduccion }}\n\n5. RESULTADO BRUTO:                 \\$ {{ \\$json.resultadoBruto }}\n\n---\n6. Gastos de Administración (610000): -$ {{ \\$json.gastosAdmin }}\n7. Gastos de Comercialización (620000):-$ {{ \\$json.gastosComercial }}\n8. Gastos de Financiación (630000):   -$ {{ \\$json.gastosFinanciacion }}\n\n---\n9. RESULTADO NETO:                  \\$ {{ \\$json.resultadoNeto }}\n---\n\nAdemás:\n- Incluí un cuadro aparte detallado del Costo de Producción mostrando \n  cada ítem con su importe.\n- Usá colores verdes para resultados positivos y rojos para negativos.\n- El HTML debe ser limpio, con tabla bien formateada y legible por email.\n- Al pie, dejá un espacio reservado con el id=\"graficotorta\" \n  donde se insertará el gráfico.\n- Usá un tono profesional pero claro.\n"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b391ee97-d075-4d86-83d6-85f764571603",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "53dd437f5001517f2d9f96c312b7cb7b5df91f505f60ded0d647893789329411"
+  },
+  "nodeGroups": [],
+  "id": "DDARZXppLva5hn1l",
+  "tags": []
+}
